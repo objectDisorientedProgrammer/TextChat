@@ -1,0 +1,10 @@
+Could turn this into a simple chat application...
+
+ -add networking
+ -help commands (e.g. '/setname user', '/setcolor green', '/help')
+ -color text
+
+TODO
+ -server
+ -properties frame for client
+ -test...
