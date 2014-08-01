@@ -25,7 +25,9 @@ public class ClientWindow
 	private int frameWidth = 300;
 	private int frameHeight = 600;
 	private String author = "Doug Chidester";
-	private String version = " v0.0.2b";
+	private String version = " v0.0.3b";
+	
+	private PropertiesFrame properties;
 	
 	private JTextArea chatArea;
 	private String welcomeMessage = "\tWelcome to TextChat!\nType '/help' to get started\n";
@@ -46,8 +48,7 @@ public class ClientWindow
 		super();
 		mainWindow = new JFrame(frameTitle);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
+		properties = new PropertiesFrame(mainWindow, this);
 		mainPanel = new JPanel(new GridLayout(0, 1, 5, 5));
 		
 		//chatHistory = new ArrayList<String>(10); TODO
@@ -97,10 +98,7 @@ public class ClientWindow
 				//  propFrame = new PropertiesFrame(reference to this) // hide on close
 				//else
 				//  setvisible(true)
-				JFrame propertiesFrame = new JFrame("Properties");// TODO make a properties frame class
-				propertiesFrame.setLocationRelativeTo(mainWindow);
-				propertiesFrame.setSize(300,200);
-				propertiesFrame.setVisible(true);
+				properties.showFrame(true);
 			}
 		});
 		buttonPanel.add(propertiesButton);
@@ -150,7 +148,7 @@ public class ClientWindow
 			{
 				bgColor = args[2].trim();
 				bgColor.toLowerCase();
-				
+				// background color options
 				switch(bgColor)
 				{
 				case "black": chatArea.setBackground(Color.black); break;
@@ -163,11 +161,13 @@ public class ClientWindow
 				case "blue": chatArea.setBackground(Color.blue); break;
 				case "purple": chatArea.setBackground(Color.magenta); break;
 				case "cyan": chatArea.setBackground(Color.cyan); break;
+				case "white": chatArea.setBackground(Color.white); break;
 
 				default: chatArea.append("Invalid background color\n"); break;
 				}
 			}
 			textColor.toLowerCase();
+			// text color options
 			switch(textColor)
 			{
 			case "black": chatArea.setForeground(Color.black); break;
@@ -180,6 +180,7 @@ public class ClientWindow
 			case "blue": chatArea.setForeground(Color.blue); break;
 			case "purple": chatArea.setForeground(Color.magenta); break;
 			case "cyan": chatArea.setForeground(Color.cyan); break;
+			case "white": chatArea.setForeground(Color.white); break;
 			case "hacker": // easter egg
 				chatArea.setBackground(Color.black);
 				chatArea.setForeground(Color.green);
@@ -204,6 +205,11 @@ public class ClientWindow
 		for(String s : commandList)
 			chatArea.append(s+"\n");
 		chatArea.append("\n");
+	}
+	
+	public void setName(String name)
+	{
+		this.username = name;
 	}
 	
 	/**
