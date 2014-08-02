@@ -25,7 +25,7 @@ public class ClientWindow
 	private int frameWidth = 300;
 	private int frameHeight = 600;
 	private String author = "Doug Chidester";
-	private String version = " v0.0.3b";
+	private String version = " v0.0.4b";
 	
 	private PropertiesFrame properties;
 	
@@ -39,7 +39,7 @@ public class ClientWindow
 	//private ArrayList<String> chatHistory;
 	private Stack<String> chatHistory;
 	private int historyCounter = 0;
-	private String[] commandList = { "/help", "/hist [clear]", "/setcolor [text] [background]", "/setname name"};
+	private String[] commandList = { "/help", "/hist [clear]", "/setcolor [text] [background]", "/setname name", "/clear"};
 	
 	private String username = "default";
 
@@ -241,6 +241,8 @@ public class ClientWindow
 				chatArea.setForeground(Color.black);
 				chatArea.setBackground(Color.white);
 			}
+			else if(parse[0].trim().equalsIgnoreCase("/clear")) // delete all current text
+				chatArea.setText(null);
 				
 			message = "["+username+"] "+chatbox.getText()+"\n";
 			chatArea.append(message);
