@@ -1,5 +1,6 @@
 package net.doug.textchat;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +26,7 @@ public class PropertiesFrame
 	private JButton saveButton;
 	private JComboBox<String> textColorChoices;
 	private JComboBox<String> bgColorChoices;
-	private String[] colors = {"black", "grey", "red", "pink", "orange", "green", "blue", "purple", "cyan", "white"};
+	private String[] colors = {"black", "grey", "red", "pink", "orange", "green", "blue", "magenta", "cyan", "white"};
 	
 	
 	public PropertiesFrame(JFrame parent, ClientWindow main)
@@ -66,6 +67,17 @@ public class PropertiesFrame
 	{
 		nameTF = new JTextField(defaultName, 20);
 		nameTF.setToolTipText("Enter a username here.");
+		nameTF.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// set username when user hits <enter>
+				String name = nameTF.getText();
+				if(name != null && !name.equalsIgnoreCase("") && !name.equalsIgnoreCase(defaultName))
+					client.setUsername(name);
+			}
+		});
 		
 		saveButton = new JButton("Apply");
 		saveButton.addActionListener(new ActionListener()
@@ -73,18 +85,8 @@ public class PropertiesFrame
 			@Override
 			public void actionPerformed(ActionEvent ae)
 			{
-				String name = nameTF.getText();
-				if(name != null && name.equalsIgnoreCase("") && name.equalsIgnoreCase(defaultName))
-					client.setName(name);
-				
-				// TODO add code to send values of comboboxes to client
-				/*
-				 * Maybe a better way to do this part is to have booleans for each component...
-				 * if one of the components change, set that bool & only update that one
-				 * 
-				 * OR
-				 * have each component with its own actionListener to update clientwindow
-				 */
+				client.setTextColor(stringToColor( (String) textColorChoices.getSelectedItem()));
+				client.setBackgroundColor(stringToColor( (String) bgColorChoices.getSelectedItem()));
 			}
 		});
 		
@@ -94,6 +96,32 @@ public class PropertiesFrame
 		bgColorChoices = new JComboBox<String>(colors);
 		bgColorChoices.setToolTipText("Background Color");
 		bgColorChoices.setSelectedIndex(colors.length - 1); // set to show 'white' as bg color
+	}
+	
+	/**
+	 * Convert a color string to a usable color.
+	 * @param s - name of color as string
+	 * @return Color
+	 */
+	private Color stringToColor(String s)
+	{
+		Color choice = null;
+		switch(s)
+		{
+		case "black": choice = Color.black; break;
+		case "grey": choice = Color.gray; break;
+		case "gray": choice = Color.gray; break;
+		case "red": choice = Color.red; break;
+		case "pink": choice = Color.pink; break;
+		case "orange": choice = Color.orange; break;
+		case "green": choice = Color.green; break;
+		case "blue": choice = Color.blue; break;
+		case "magenta": choice = Color.magenta; break;
+		case "cyan": choice = Color.cyan; break;
+		case "white": choice = Color.white; break;
+		default: break;
+		}
+		return choice;
 	}
 
 	/**

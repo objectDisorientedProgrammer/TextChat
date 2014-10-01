@@ -30,7 +30,7 @@ public class ClientWindow
 	private PropertiesFrame properties;
 	
 	private JTextArea chatArea;
-	private String welcomeMessage = "\tWelcome to TextChat!\nType '/help' to get started\n";
+	private String welcomeMessage = "\tWelcome to TextChat!\nType '/help' to get started\n\n";
 	private int chatboxRows = 12;
 	private int chatboxColumns = 30;
 	private JScrollPane chatAreaScrollPane;
@@ -149,44 +149,13 @@ public class ClientWindow
 				bgColor = args[2].trim();
 				bgColor.toLowerCase();
 				// background color options
-				switch(bgColor)
-				{
-				case "black": chatArea.setBackground(Color.black); break;
-				case "grey": chatArea.setBackground(Color.gray); break;
-				case "gray": chatArea.setBackground(Color.gray); break;
-				case "red": chatArea.setBackground(Color.red); break;
-				case "orange": chatArea.setBackground(Color.orange); break;
-				case "green": chatArea.setBackground(Color.green); break;
-				case "pink": chatArea.setBackground(Color.pink); break;
-				case "blue": chatArea.setBackground(Color.blue); break;
-				case "purple": chatArea.setBackground(Color.magenta); break;
-				case "cyan": chatArea.setBackground(Color.cyan); break;
-				case "white": chatArea.setBackground(Color.white); break;
-
-				default: chatArea.append("Invalid background color\n"); break;
-				}
+				setBackgroundColor(stringToColor(bgColor));
+				// TODO update comboboxes in propertiesFrame
 			}
 			textColor.toLowerCase();
 			// text color options
-			switch(textColor)
-			{
-			case "black": chatArea.setForeground(Color.black); break;
-			case "grey": chatArea.setForeground(Color.gray); break;
-			case "gray": chatArea.setForeground(Color.gray); break;
-			case "red": chatArea.setForeground(Color.red); break;
-			case "pink": chatArea.setForeground(Color.pink); break;
-			case "orange": chatArea.setForeground(Color.orange); break;
-			case "green": chatArea.setForeground(Color.green); break;
-			case "blue": chatArea.setForeground(Color.blue); break;
-			case "purple": chatArea.setForeground(Color.magenta); break;
-			case "cyan": chatArea.setForeground(Color.cyan); break;
-			case "white": chatArea.setForeground(Color.white); break;
-			case "hacker": // easter egg
-				chatArea.setBackground(Color.black);
-				chatArea.setForeground(Color.green);
-				break;
-			default: chatArea.append("Invalid text color\n"); break;
-			}
+			setTextColor(stringToColor(textColor));
+			// TODO update comboboxes in propertiesFrame
 		}
 		else if(args[0].trim().equalsIgnoreCase("/hist"))
 			if(args[1].trim().equalsIgnoreCase("clear"))
@@ -194,6 +163,32 @@ public class ClientWindow
 				chatHistory.clear();
 				historyCounter = 0;
 			}
+	}
+	
+	/**
+	 * Convert a color string to a usable color.
+	 * @param s - name of color as string
+	 * @return Color
+	 */
+	private Color stringToColor(String s)
+	{
+		Color choice = null;
+		switch(s)
+		{
+		case "black": choice = Color.black; break;
+		case "grey": choice = Color.gray; break;
+		case "gray": choice = Color.gray; break;
+		case "red": choice = Color.red; break;
+		case "pink": choice = Color.pink; break;
+		case "orange": choice = Color.orange; break;
+		case "green": choice = Color.green; break;
+		case "blue": choice = Color.blue; break;
+		case "magenta": choice = Color.magenta; break;
+		case "cyan": choice = Color.cyan; break;
+		case "white": choice = Color.white; break;
+		default: break;
+		}
+		return choice;
 	}
 	
 	/**
@@ -207,7 +202,23 @@ public class ClientWindow
 		chatArea.append("\n");
 	}
 	
-	public void setName(String name)
+	public void setTextColor(Color fg)
+	{
+		if(chatArea.getBackground() == fg)
+			chatArea.append("\nCannot set text & background color to the same thing.\n"); // almost certain this will never trigger (as of oct 1, 2014)
+		else
+			chatArea.setForeground(fg);
+	}
+	
+	public void setBackgroundColor(Color bg)
+	{
+		if(chatArea.getForeground() == bg)
+			chatArea.append("\nCannot set text & background color to the same thing.\n");
+		else
+			chatArea.setBackground(bg);
+	}
+	
+	public void setUsername(String name)
 	{
 		this.username = name;
 	}
