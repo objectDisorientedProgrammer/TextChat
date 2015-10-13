@@ -12,7 +12,6 @@ import java.util.Stack;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -23,17 +22,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.localarea.network.doug.WebsiteTimerGUIelement;
-
 public class ClientWindow
 {
 	private JFrame mainWindow;
 	private JPanel mainPanel;
 	private String frameTitle = "TextChat";
-	private int frameWidth = 300;
-	private int frameHeight = 600;
+	private final int frameWidth = 300;
+	private final int frameHeight = 600;
 	private String author = "Doug Chidester";
-	private String version = " v0.0.4b";
+	private String version = " v0.0.6b";
 	
 	private PropertiesFrame properties;
 	
@@ -50,6 +47,7 @@ public class ClientWindow
 	private String[] commandList = { "/help", "/hist [clear]", "/setcolor [text] [background]", "/setname name", "/clear"};
 	
 	private String username = "default";
+	private String imagePath = "/images/";	// path in jar file
 
 	public ClientWindow()
 	{
@@ -58,6 +56,8 @@ public class ClientWindow
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		properties = new PropertiesFrame(mainWindow, this);
 		mainPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+		
+		createAndAddMenuBar();
 		
 		//chatHistory = new ArrayList<String>(10); TODO
 		chatHistory = new Stack<String>();
