@@ -260,22 +260,14 @@ public class ClientWindow
 	}
 	
 	/**
-	 * Print a list of commands.
+	 * Print the list of available commands.
 	 */
 	private void printHelp()
 	{
-		// save current color
-		Color oldColor = chatArea.getForeground();
-		setTextColor(Color.blue);
-		
-		// print help
 		chatArea.append("\nList of commands:\n");
 		for(String s : commandList)
 			chatArea.append(s+"\n");
 		chatArea.append("\n");
-		
-		// reset original color
-		setTextColor(oldColor);
 	}
 	
 	public void setTextColor(Color fg)
