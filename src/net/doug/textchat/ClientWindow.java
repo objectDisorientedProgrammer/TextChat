@@ -47,7 +47,6 @@ public class ClientWindow
 	private String[] commandList = { "/help", "/hist [clear]", "/setcolor [text] [background]", "/setname name", "/clear"};
 	
 	private String username = "default";
-	private String imagePath = "/images/";	// path in jar file
 
 	public ClientWindow()
 	{
@@ -130,6 +129,8 @@ public class ClientWindow
 	
 	private void createAndAddMenuBar()
 	{
+		final String imagePath = "/images/";	// path in jar file
+		
 		JMenuBar menuBar = new JMenuBar();
 		mainWindow.setJMenuBar(menuBar);
 		
@@ -137,35 +138,22 @@ public class ClientWindow
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(fileMenu);
 		
-		JMenuItem saveMenuItem = new JMenuItem("Save");
-		saveMenuItem.setMnemonic(KeyEvent.VK_S);
-		saveMenuItem.setIcon(new ImageIcon(this.getClass().getResource(imagePath + "save.png")));
-		saveMenuItem.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				//writeToFile(filenameTextfield.getText()); // File -> Save
-			}
-		});
-		fileMenu.add(saveMenuItem);
-		
 		JMenuItem quitMenuItem = new JMenuItem("Quit", new ImageIcon(this.getClass().getResource(imagePath+"exit.png")));
 		quitMenuItem.setMnemonic(KeyEvent.VK_Q);
 		quitMenuItem.addActionListener(new ActionListener()
 		{
             public void actionPerformed(ActionEvent e)
             {
-                // save data and close program if user clicks: File -> Quit
-            	//writeToFile(filenameTextfield.getText());
                 mainWindow.dispose();
             }
 		});
 		fileMenu.add(quitMenuItem);
 		
+		/* TODO add properties window launch here?
 		JMenu optionsMenu = new JMenu("Options");
 		optionsMenu.setMnemonic(KeyEvent.VK_O);
 		menuBar.add(optionsMenu);
+		*/
 		
 		JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
@@ -276,10 +264,18 @@ public class ClientWindow
 	 */
 	private void printHelp()
 	{
+		// save current color
+		Color oldColor = chatArea.getForeground();
+		setTextColor(Color.blue);
+		
+		// print help
 		chatArea.append("\nList of commands:\n");
 		for(String s : commandList)
 			chatArea.append(s+"\n");
 		chatArea.append("\n");
+		
+		// reset original color
+		setTextColor(oldColor);
 	}
 	
 	public void setTextColor(Color fg)
