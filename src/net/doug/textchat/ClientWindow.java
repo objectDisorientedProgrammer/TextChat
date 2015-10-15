@@ -10,8 +10,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Stack;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -22,10 +27,10 @@ public class ClientWindow
 	private JFrame mainWindow;
 	private JPanel mainPanel;
 	private String frameTitle = "TextChat";
-	private int frameWidth = 300;
-	private int frameHeight = 600;
+	private final int frameWidth = 300;
+	private final int frameHeight = 600;
 	private String author = "Doug Chidester";
-	private String version = " v0.0.4b";
+	private String version = " v0.0.6b";
 	
 	private PropertiesFrame properties;
 	
@@ -42,6 +47,7 @@ public class ClientWindow
 	private String[] commandList = { "/help", "/hist [clear]", "/setcolor [text] [background]", "/setname name", "/clear"};
 	
 	private String username = "default";
+	private String imagePath = "/images/";	// path in jar file
 
 	public ClientWindow()
 	{
@@ -51,11 +57,12 @@ public class ClientWindow
 		properties = new PropertiesFrame(mainWindow, this);
 		mainPanel = new JPanel(new GridLayout(0, 1, 5, 5));
 		
+		createAndAddMenuBar();
+		
 		//chatHistory = new ArrayList<String>(10); TODO
 		chatHistory = new Stack<String>();
 		
 		createAndShowGUI();
-		
 		
 		mainWindow.pack();
 		mainWindow.setLocationRelativeTo(null);
@@ -107,7 +114,7 @@ public class ClientWindow
 		JPanel chatPanel = new JPanel(new BorderLayout(2, 2));
 		
 		// text area
-		chatArea = new JTextArea(/*welcomeMessage, */chatboxRows, chatboxColumns);
+		chatArea = new JTextArea(chatboxRows, chatboxColumns);
 		chatArea.append(welcomeMessage); // will auto-scroll without welcomeMessage in constructor
 		chatArea.setEditable(false);
 		chatAreaScrollPane = new JScrollPane(chatArea);
@@ -118,6 +125,67 @@ public class ClientWindow
 		mainPanel.add(buttonPanel);
 		
 		mainWindow.add(mainPanel);
+	}
+	
+	private void createAndAddMenuBar()
+	{
+		JMenuBar menuBar = new JMenuBar();
+		mainWindow.setJMenuBar(menuBar);
+		
+		JMenu fileMenu = new JMenu("File");
+		fileMenu.setMnemonic(KeyEvent.VK_F);
+		menuBar.add(fileMenu);
+		
+		JMenuItem quitMenuItem = new JMenuItem("Quit", new ImageIcon(this.getClass().getResource(imagePath+"exit.png")));
+		quitMenuItem.setMnemonic(KeyEvent.VK_Q);
+		quitMenuItem.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+                // save data and close program if user clicks: File -> Quit
+            	//writeToFile(filenameTextfield.getText());
+                mainWindow.dispose();
+            }
+		});
+		fileMenu.add(quitMenuItem);
+		
+		/*
+		JMenu optionsMenu = new JMenu("Options");
+		optionsMenu.setMnemonic(KeyEvent.VK_O);
+		menuBar.add(optionsMenu);
+		*/
+		
+		JMenu helpMenu = new JMenu("Help");
+		helpMenu.setMnemonic(KeyEvent.VK_H);
+		menuBar.add(helpMenu);
+		
+		JMenuItem helpMenuItem = new JMenuItem("Getting Started", new ImageIcon(this.getClass().getResource(imagePath+"help.png")));
+		helpMenuItem.setMnemonic(KeyEvent.VK_G);
+		helpMenuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// show basic use instructions if user clicks: Help -> Getting Started
+                JOptionPane.showMessageDialog(null, "halp msg", "Usage",
+						JOptionPane.PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"help64.png")));
+			}
+		});
+		helpMenu.add(helpMenuItem);
+		
+		JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon(this.getClass().getResource(imagePath+"about.png")));
+		aboutMenuItem.setMnemonic(KeyEvent.VK_A);
+		aboutMenuItem.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// show author and version if user clicks: Help -> About
+				JOptionPane.showMessageDialog(null, "Created by " + author + "\nVersion " + version, "About",
+						JOptionPane.INFORMATION_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"person.png")));
+			}
+		});
+		helpMenu.add(aboutMenuItem);
 	}
 	
 	/**
