@@ -64,7 +64,6 @@ public class ClientWindow
 		
 		createAndShowGUI();
 		
-		
 		mainWindow.pack();
 		mainWindow.setLocationRelativeTo(null);
 		// show mainWindow
@@ -115,7 +114,7 @@ public class ClientWindow
 		JPanel chatPanel = new JPanel(new BorderLayout(2, 2));
 		
 		// text area
-		chatArea = new JTextArea(/*welcomeMessage, */chatboxRows, chatboxColumns);
+		chatArea = new JTextArea(chatboxRows, chatboxColumns);
 		chatArea.append(welcomeMessage); // will auto-scroll without welcomeMessage in constructor
 		chatArea.setEditable(false);
 		chatAreaScrollPane = new JScrollPane(chatArea);
@@ -137,19 +136,6 @@ public class ClientWindow
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(fileMenu);
 		
-		JMenuItem saveMenuItem = new JMenuItem("Save");
-		saveMenuItem.setMnemonic(KeyEvent.VK_S);
-		saveMenuItem.setIcon(new ImageIcon(this.getClass().getResource(imagePath + "save.png")));
-		saveMenuItem.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				//writeToFile(filenameTextfield.getText()); // File -> Save
-			}
-		});
-		fileMenu.add(saveMenuItem);
-		
 		JMenuItem quitMenuItem = new JMenuItem("Quit", new ImageIcon(this.getClass().getResource(imagePath+"exit.png")));
 		quitMenuItem.setMnemonic(KeyEvent.VK_Q);
 		quitMenuItem.addActionListener(new ActionListener()
@@ -163,9 +149,11 @@ public class ClientWindow
 		});
 		fileMenu.add(quitMenuItem);
 		
+		/*
 		JMenu optionsMenu = new JMenu("Options");
 		optionsMenu.setMnemonic(KeyEvent.VK_O);
 		menuBar.add(optionsMenu);
+		*/
 		
 		JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
