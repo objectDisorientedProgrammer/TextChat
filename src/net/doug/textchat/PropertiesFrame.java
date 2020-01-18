@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -38,7 +39,9 @@ public class PropertiesFrame
 	
 	private ClientWindow client;
 	
+	private JLabel nameLabel;
 	private JTextField nameTF;
+	
 	private String defaultName = "default username";
 	private JButton saveButton;
 	private JComboBox<String> textColorChoices;
@@ -60,8 +63,6 @@ public class PropertiesFrame
 		
 		createUI();
 		addUI();
-		
-		
 	}
 	
 	/**
@@ -69,6 +70,7 @@ public class PropertiesFrame
 	 */
 	private void addUI()
 	{
+		propertiesPanel.add(nameLabel);
 		propertiesPanel.add(nameTF);
 		propertiesPanel.add(textColorChoices);
 		propertiesPanel.add(bgColorChoices);
@@ -82,7 +84,9 @@ public class PropertiesFrame
 	 */
 	private void createUI()
 	{
-		nameTF = new JTextField(defaultName, 20);
+		nameLabel = new JLabel("Name:");
+		
+		nameTF = new JTextField(client.getUsername(), 20);
 		nameTF.setToolTipText("Enter a username here.");
 		nameTF.addActionListener(new ActionListener()
 		{
@@ -91,7 +95,7 @@ public class PropertiesFrame
 			{
 				// set username when user hits <enter>
 				String name = nameTF.getText();
-				if(name != null && !name.equalsIgnoreCase("") && !name.equalsIgnoreCase(defaultName))
+				if(name != null && !name.isEmpty() && !name.equalsIgnoreCase(defaultName))
 					client.setUsername(name);
 			}
 		});
@@ -104,6 +108,7 @@ public class PropertiesFrame
 			{
 				client.setTextColor(stringToColor( (String) textColorChoices.getSelectedItem()));
 				client.setBackgroundColor(stringToColor( (String) bgColorChoices.getSelectedItem()));
+				client.setUsername(nameTF.getText());
 			}
 		});
 		
