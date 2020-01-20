@@ -47,24 +47,25 @@ public class ClientWindow
 	private final int frameWidth = 300;
 	private final int frameHeight = 600;
 	private String author = "Doug Chidester";
-	private String version = " v0.0.6b";
-	
+	private String version = " v0.0.7b";
+
 	private PropertiesFrame properties;
-	
+
 	private JTextArea chatArea;
 	private String welcomeMessage = "\tWelcome to TextChat!\nType '/help' to get started\n\n";
 	private int chatboxRows = 12;
 	private int chatboxColumns = 30;
 	private JScrollPane chatAreaScrollPane;
-	
+
 	private JTextField chatbox;
-	//private ArrayList<String> chatHistory;
+	// private ArrayList<String> chatHistory;
 	private Stack<String> chatHistory;
 	private int historyCounter = 0;
-	private String[] commandList = { "/help", "/hist [clear]", "/setcolor [text] [background]", "/setname name", "/clear"};
-	
+	private String[] commandList = { "/help", "/hist [clear]",
+			"/setcolor [text] [background]", "/setname name", "/clear" };
+
 	private String username = "default";
-	private String imagePath = "/images/";	// path in jar file
+	private String imagePath = "/images/"; // path in jar file
 
 	public ClientWindow()
 	{
@@ -73,14 +74,14 @@ public class ClientWindow
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		properties = new PropertiesFrame(mainWindow, this);
 		mainPanel = new JPanel(new GridLayout(0, 1, 5, 5));
-		
+
 		createAndAddMenuBar();
-		
-		//chatHistory = new ArrayList<String>(10); TODO
+
+		// chatHistory = new ArrayList<String>(10); TODO
 		chatHistory = new Stack<String>();
-		
+
 		createAndShowGUI();
-		
+
 		mainWindow.pack();
 		mainWindow.setLocationRelativeTo(null);
 		// show mainWindow
@@ -91,106 +92,143 @@ public class ClientWindow
 	{
 		// add buttons
 		JPanel buttonPanel = new JPanel(new FlowLayout());
-		
+
 		// chat textfield
 		chatbox = new JTextField(15);
 		chatbox.addActionListener(new ChatListener());
-		chatbox.addKeyListener(new KeyListener() {
+		chatbox.addKeyListener(new KeyListener()
+		{
 			@Override
-			public void keyTyped(KeyEvent arg0) {}
+			public void keyTyped(KeyEvent arg0)
+			{
+			}
+
 			@Override
-			public void keyReleased(KeyEvent arg0) {}
+			public void keyReleased(KeyEvent arg0)
+			{
+			}
+
 			@Override
-			public void keyPressed(KeyEvent ke) {
+			public void keyPressed(KeyEvent ke)
+			{
 				if(ke.getKeyCode() == KeyEvent.VK_UP)
-					chatbox.setText(chatHistory.peek());
+					chatbox.setText(chatHistory.peek()); // populate most recently sent message
+				else if(ke.getKeyCode() == KeyEvent.VK_DOWN)
+					chatbox.setText(""); // clear text on down arrow
 			}
 		});
 		buttonPanel.add(chatbox);
-		
+
 		// send button
 		JButton send = new JButton("Send");
 		send.addActionListener(new ChatListener());
 		buttonPanel.add(send);
-		
+
 		JButton propertiesButton = new JButton("properties");
-		propertiesButton.addActionListener(new ActionListener(){
+		propertiesButton.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				// make class PropertiesFrame...
-				//if(frame not created yet)
-				//  propFrame = new PropertiesFrame(reference to this) // hide on close
-				//else
-				//  setvisible(true)
+				// if(frame not created yet)
+				// propFrame = new PropertiesFrame(reference to this) // hide on
+				// close
+				// else
+				// setvisible(true)
 				properties.showFrame(true);
 			}
 		});
-		buttonPanel.add(propertiesButton);
-		
+		//buttonPanel.add(propertiesButton);
+
 		// add chat box
 		JPanel chatPanel = new JPanel(new BorderLayout(2, 2));
-		
+
 		// text area
 		chatArea = new JTextArea(chatboxRows, chatboxColumns);
-		chatArea.append(welcomeMessage); // will auto-scroll without welcomeMessage in constructor
+		chatArea.append(welcomeMessage); // will auto-scroll without
+											// welcomeMessage in constructor
 		chatArea.setEditable(false);
 		chatAreaScrollPane = new JScrollPane(chatArea);
-		chatAreaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		chatAreaScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		chatPanel.add(chatAreaScrollPane);
-		
+
 		mainPanel.add(chatPanel);
 		mainPanel.add(buttonPanel);
-		
+
 		mainWindow.add(mainPanel);
 	}
-	
+
 	private void createAndAddMenuBar()
 	{
 		JMenuBar menuBar = new JMenuBar();
 		mainWindow.setJMenuBar(menuBar);
-		
+
 		JMenu fileMenu = new JMenu("File");
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(fileMenu);
-		
-		JMenuItem quitMenuItem = new JMenuItem("Quit", new ImageIcon(this.getClass().getResource(imagePath+"exit.png")));
+
+		JMenuItem quitMenuItem = new JMenuItem("Quit", new ImageIcon(this
+				.getClass().getResource(imagePath + "exit.png")));
 		quitMenuItem.setMnemonic(KeyEvent.VK_Q);
 		quitMenuItem.addActionListener(new ActionListener()
 		{
-            public void actionPerformed(ActionEvent e)
-            {
-                // save data and close program if user clicks: File -> Quit
-            	//writeToFile(filenameTextfield.getText());
-                mainWindow.dispose();
-            }
+			public void actionPerformed(ActionEvent e)
+			{
+				// save data and close program if user clicks: File -> Quit
+				// writeToFile(filenameTextfield.getText());
+				mainWindow.dispose();
+			}
 		});
 		fileMenu.add(quitMenuItem);
-		
-		/*
-		JMenu optionsMenu = new JMenu("Options");
-		optionsMenu.setMnemonic(KeyEvent.VK_O);
-		menuBar.add(optionsMenu);
-		*/
-		
+
+		// options menu item
+		 JMenu optionsMenu = new JMenu("Options");
+		 optionsMenu.setMnemonic(KeyEvent.VK_O);
+		 menuBar.add(optionsMenu);
+		 
+		 JMenuItem propertiesItem = new JMenuItem("Properties");
+		 propertiesItem.setMnemonic(KeyEvent.VK_P);
+		 propertiesItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					properties.showFrame(true);
+				}
+			});
+		 optionsMenu.add(propertiesItem);
+		 
+		 
+		 // help menu item
 		JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(helpMenu);
-		
-		JMenuItem helpMenuItem = new JMenuItem("Getting Started", new ImageIcon(this.getClass().getResource(imagePath+"help.png")));
+
+		JMenuItem helpMenuItem = new JMenuItem("Getting Started",
+				new ImageIcon(this.getClass().getResource(
+						imagePath + "help.png")));
 		helpMenuItem.setMnemonic(KeyEvent.VK_G);
 		helpMenuItem.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// show basic use instructions if user clicks: Help -> Getting Started
-                JOptionPane.showMessageDialog(null, "halp msg", "Usage",
-						JOptionPane.PLAIN_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"help64.png")));
+				// show basic use instructions if user clicks: Help -> Getting
+				// Started
+				JOptionPane.showMessageDialog(
+						null,
+						"halp msg",
+						"Usage",
+						JOptionPane.PLAIN_MESSAGE,
+						new ImageIcon(this.getClass().getResource(
+								imagePath + "help64.png")));
 			}
 		});
 		helpMenu.add(helpMenuItem);
-		
-		JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon(this.getClass().getResource(imagePath+"about.png")));
+
+		JMenuItem aboutMenuItem = new JMenuItem("About", new ImageIcon(this
+				.getClass().getResource(imagePath + "about.png")));
 		aboutMenuItem.setMnemonic(KeyEvent.VK_A);
 		aboutMenuItem.addActionListener(new ActionListener()
 		{
@@ -198,29 +236,30 @@ public class ClientWindow
 			public void actionPerformed(ActionEvent e)
 			{
 				// show author and version if user clicks: Help -> About
-				JOptionPane.showMessageDialog(null, "Created by " + author + "\nVersion " + version, "About",
-						JOptionPane.INFORMATION_MESSAGE, new ImageIcon(this.getClass().getResource(imagePath+"person.png")));
+				JOptionPane.showMessageDialog(
+						null,
+						"Created by " + author + "\nVersion " + version,
+						"About",
+						JOptionPane.INFORMATION_MESSAGE,
+						new ImageIcon(this.getClass().getResource(
+								imagePath + "person.png")));
 			}
 		});
 		helpMenu.add(aboutMenuItem);
 	}
-	
+
 	/**
 	 * Create a formatted string to add to the command history.
-	 * @param addThis - string to append.
+	 * 
+	 * @param addThis
+	 *            - string to append.
 	 * @return The string created.
 	 */
 	private String makeHistoryString(String addThis)
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("  ");
-		sb.append(++historyCounter);
-		sb.append(": ");
-		sb.append(addThis);
-		
-		return sb.toString();
+		return " " + (++historyCounter) + ": " + addThis;
 	}
-	
+
 	private void evaluateCommand(String[] args)
 	{
 		if(args[0].trim().equalsIgnoreCase("/setname"))
@@ -241,18 +280,19 @@ public class ClientWindow
 			// text color options
 			setTextColor(stringToColor(textColor));
 			// TODO update comboboxes in propertiesFrame
-		}
-		else if(args[0].trim().equalsIgnoreCase("/hist"))
+		} else if(args[0].trim().equalsIgnoreCase("/hist"))
 			if(args[1].trim().equalsIgnoreCase("clear"))
 			{
 				chatHistory.clear();
 				historyCounter = 0;
 			}
 	}
-	
+
 	/**
 	 * Convert a color string to a usable color.
-	 * @param s - name of color as string
+	 * 
+	 * @param s
+	 *            - name of color as string
 	 * @return Color
 	 */
 	private Color stringToColor(String s)
@@ -260,22 +300,45 @@ public class ClientWindow
 		Color choice = null;
 		switch(s)
 		{
-		case "black": choice = Color.black; break;
-		case "grey": choice = Color.gray; break;
-		case "gray": choice = Color.gray; break;
-		case "red": choice = Color.red; break;
-		case "pink": choice = Color.pink; break;
-		case "orange": choice = Color.orange; break;
-		case "green": choice = Color.green; break;
-		case "blue": choice = Color.blue; break;
-		case "magenta": choice = Color.magenta; break;
-		case "cyan": choice = Color.cyan; break;
-		case "white": choice = Color.white; break;
-		default: break;
+			case "black":
+				choice = Color.black;
+				break;
+			case "grey":
+				choice = Color.gray;
+				break;
+			case "gray":
+				choice = Color.gray;
+				break;
+			case "red":
+				choice = Color.red;
+				break;
+			case "pink":
+				choice = Color.pink;
+				break;
+			case "orange":
+				choice = Color.orange;
+				break;
+			case "green":
+				choice = Color.green;
+				break;
+			case "blue":
+				choice = Color.blue;
+				break;
+			case "magenta":
+				choice = Color.magenta;
+				break;
+			case "cyan":
+				choice = Color.cyan;
+				break;
+			case "white":
+				choice = Color.white;
+				break;
+			default:
+				break;
 		}
 		return choice;
 	}
-	
+
 	/**
 	 * Print a list of commands.
 	 */
@@ -283,18 +346,28 @@ public class ClientWindow
 	{
 		chatArea.append("\nList of commands:\n");
 		for(String s : commandList)
-			chatArea.append(s+"\n");
+			chatArea.append(s + "\n");
 		chatArea.append("\n");
 	}
-	
+
 	public void setTextColor(Color fg)
 	{
 		if(chatArea.getBackground() == fg)
-			chatArea.append("\nCannot set text & background color to the same thing.\n"); // almost certain this will never trigger (as of oct 1, 2014)
+			chatArea.append("\nCannot set text & background color to the same thing.\n"); // almost
+																							// certain
+																							// this
+																							// will
+																							// never
+																							// trigger
+																							// (as
+																							// of
+																							// oct
+																							// 1,
+																							// 2014)
 		else
 			chatArea.setForeground(fg);
 	}
-	
+
 	public void setBackgroundColor(Color bg)
 	{
 		if(chatArea.getForeground() == bg)
@@ -302,50 +375,59 @@ public class ClientWindow
 		else
 			chatArea.setBackground(bg);
 	}
-	
+
 	public void setUsername(String name)
 	{
 		this.username = name;
 	}
 	
+	public String getUsername()
+	{
+		return this.username;
+	}
+
 	/**
 	 * ChatListener class. Handles chatbox and send button.
+	 * 
 	 * @author Doug
 	 *
 	 */
 	private class ChatListener implements ActionListener
 	{
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e)
+		{
 			String message = chatbox.getText();
 			String parse[] = message.split(" ");
-			
+
 			if(parse.length >= 2)
 				evaluateCommand(parse);
 			else if(parse[0].trim().equalsIgnoreCase("/hist"))
 			{
-				//chatHistory.add(makeHistoryString(chatbox.getText()));
-				//chatHistory.push(makeHistoryString(chatbox.getText()));//TODO
+				// chatHistory.add(makeHistoryString(chatbox.getText()));
+				// chatHistory.push(makeHistoryString(chatbox.getText()));//TODO
 				chatHistory.push(chatbox.getText());
 				for(String s : chatHistory)
-					chatArea.append(makeHistoryString(s)+"\n");
-			}
-			else if(parse[0].trim().equalsIgnoreCase("/help"))
+					chatArea.append(makeHistoryString(s) + "\n");
+			} else if(parse[0].trim().equalsIgnoreCase("/help"))
 				printHelp();
-			else if(parse[0].trim().equalsIgnoreCase("/setcolor")) // set default colors
+			else if(parse[0].trim().equalsIgnoreCase("/setcolor")) // set
+																	// default
+																	// colors
 			{
 				chatArea.setForeground(Color.black);
 				chatArea.setBackground(Color.white);
-			}
-			else if(parse[0].trim().equalsIgnoreCase("/clear")) // delete all current text
+			} else if(parse[0].trim().equalsIgnoreCase("/clear")) // delete all
+																	// current
+																	// text
 				chatArea.setText(null);
-				
-			message = "["+username+"] "+chatbox.getText()+"\n";
+
+			message = "[" + username + "] " + chatbox.getText() + "\n";
 			chatArea.append(message);
-			//chatHistory.add(makeHistoryString(chatbox.getText()));
-			//chatHistory.push(makeHistoryString(chatbox.getText()));
-			chatHistory.push(chatbox.getText());//TODO
-			
+			// chatHistory.add(makeHistoryString(chatbox.getText()));
+			// chatHistory.push(makeHistoryString(chatbox.getText()));
+			chatHistory.push(chatbox.getText());// TODO
+
 			chatbox.setText("");
 		}
 	}

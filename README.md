@@ -1,5 +1,4 @@
-TextChat
-========
-Author Douglas Chidester.
-
+# TextChat
 Simple chat application.
+
+Author Douglas Chidester.

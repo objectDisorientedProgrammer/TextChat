@@ -1,2 +1,4 @@
-bin/net/*
-res/*
+bin/*
+.settings/
+.classpath
+.project
