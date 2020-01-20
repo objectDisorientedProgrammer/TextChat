@@ -108,7 +108,8 @@ public class PropertiesFrame
 			{
 				client.setTextColor(stringToColor( (String) textColorChoices.getSelectedItem()));
 				client.setBackgroundColor(stringToColor( (String) bgColorChoices.getSelectedItem()));
-				client.setUsername(nameTF.getText());
+				if(name != null && !name.isEmpty())
+					client.setUsername(nameTF.getText());
 			}
 		});
 		
