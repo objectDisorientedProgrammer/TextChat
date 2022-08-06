@@ -42,7 +42,7 @@ public class PropertiesFrame
 	private JLabel nameLabel;
 	private JTextField nameTF;
 	
-	private String defaultName = "default username";
+	private String defaultName = "default_user";
 	private JButton saveButton;
 	private JComboBox<String> textColorChoices;
 	private JComboBox<String> bgColorChoices;
@@ -94,7 +94,7 @@ public class PropertiesFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				// set username when user hits <enter>
-				String name = nameTF.getText();
+				String name = nameTF.getText(); // TODO refactor: helper function for username validation
 				if(name != null && !name.isEmpty() && !name.equalsIgnoreCase(defaultName))
 					client.setUsername(name);
 			}
@@ -108,7 +108,8 @@ public class PropertiesFrame
 			{
 				client.setTextColor(stringToColor( (String) textColorChoices.getSelectedItem()));
 				client.setBackgroundColor(stringToColor( (String) bgColorChoices.getSelectedItem()));
-				if(name != null && !name.isEmpty())
+				String name = nameTF.getText(); // TODO refactor: helper function for username validation
+				if(name != null && !name.isEmpty() && !name.equalsIgnoreCase(defaultName))
 					client.setUsername(nameTF.getText());
 			}
 		});
