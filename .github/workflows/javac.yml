@@ -25,6 +25,4 @@ jobs:
     - name: Copy resources
       run: cp -r res/images/ src/
     - name: Build with javac
-      run: javac net/doug/textchat/*.java
-    - name: Run
-      run: java net.doug.textchat.TextChatMain
+      run: cd src/ && javac net/doug/textchat/*.java
