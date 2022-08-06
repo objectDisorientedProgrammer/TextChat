@@ -1,4 +1,9 @@
 # TextChat
-Simple chat application.
+A simple chat application for local network connections.
 
-Author Douglas Chidester.
+## Building
+Currently builds from a command line interface with `javac`
+#### Steps
+1. copy or move `res/images` under `src/`: `cp -r res/images/ src/`
+2. Build with `javac`: `javac net/doug/textchat/*.java`
+3. Run with `java`: `java net.doug.textchat.TextChatMain`
