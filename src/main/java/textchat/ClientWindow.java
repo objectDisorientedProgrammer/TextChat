@@ -65,7 +65,7 @@ public class ClientWindow
 			"/setcolor [text] [background]", "/setname name", "/clear" };
 
 	private String username = "default";
-	private String imagePath = "/resources/images/"; // path in jar file
+	private String imagePath = "/images/"; // path in jar file
 
 	public ClientWindow()
 	{
