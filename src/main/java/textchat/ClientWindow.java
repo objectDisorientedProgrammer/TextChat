@@ -52,7 +52,7 @@ public class ClientWindow
 	private PropertiesFrame properties;
 
 	private JTextArea chatArea;
-	private String welcomeMessage = "\tWelcome to TextChat!\nType '/help' to get started\n\n";
+	private String welcomeMessage = "\tWelcome to TextChat!\nType '/help' to get started.\n\n";
 	private int chatboxRows = 12;
 	private int chatboxColumns = 30;
 	private JScrollPane chatAreaScrollPane;
@@ -291,8 +291,8 @@ public class ClientWindow
 	/**
 	 * Convert a color string to a usable color.
 	 * 
-	 * @param s
-	 *            - name of color as string
+	 * @param s - name of color as string
+     *
 	 * @return Color
 	 */
 	private Color stringToColor(String s)
@@ -331,9 +331,8 @@ public class ClientWindow
 				choice = Color.cyan;
 				break;
 			case "white":
-				choice = Color.white;
-				break;
 			default:
+                choice = Color.white;
 				break;
 		}
 		return choice;
