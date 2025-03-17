@@ -76,7 +76,7 @@ public class ClientWindow
 		mainWindow.setSize(frameWidth, frameHeight);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		properties = new PropertiesFrame(this);
-		mainPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+		mainPanel = new JPanel(new BorderLayout(10, 10));
 
 		createAndAddMenuBar();
 
@@ -100,7 +100,7 @@ public class ClientWindow
 	private void createAndShowGUI()
 	{
 		// add buttons
-		JPanel buttonPanel = new JPanel(new FlowLayout());
+		JPanel buttonPanel = new JPanel(new BorderLayout(10, 10));
 
 		// chat textfield
 		chatbox = new JTextField(15);
@@ -143,12 +143,12 @@ public class ClientWindow
 				}
 			}
 		});
-		buttonPanel.add(chatbox);
+		buttonPanel.add(chatbox, BorderLayout.CENTER);
 
 		// send button
 		JButton send = new JButton("Send");
 		send.addActionListener(new ChatListener());
-		buttonPanel.add(send);
+		buttonPanel.add(send, BorderLayout.EAST);
 
 		JButton propertiesButton = new JButton("properties");
 		propertiesButton.addActionListener(new ActionListener()
@@ -168,7 +168,7 @@ public class ClientWindow
 		//buttonPanel.add(propertiesButton);
 
 		// add chat box
-		JPanel chatPanel = new JPanel(new BorderLayout(2, 2));
+		JPanel chatPanel = new JPanel(new BorderLayout(10, 10));
 
 		// text area
 		chatArea = new JTextArea(chatboxRows, chatboxColumns);
@@ -180,8 +180,8 @@ public class ClientWindow
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		chatPanel.add(chatAreaScrollPane);
 
-		mainPanel.add(chatPanel);
-		mainPanel.add(buttonPanel);
+		mainPanel.add(chatPanel, BorderLayout.CENTER);
+		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		mainWindow.add(mainPanel);
 	}
