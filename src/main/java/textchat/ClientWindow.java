@@ -25,7 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Stack;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -44,10 +44,10 @@ public class ClientWindow
 	private JFrame mainWindow;
 	private JPanel mainPanel;
 	private String frameTitle = "TextChat";
-	private final int frameWidth = 300;
-	private final int frameHeight = 600;
+	private final int frameWidth = 450;
+	private final int frameHeight = 400;
 	private String author = "Doug C";
-	private String version = " v0.0.8";
+	private String version = " v0.0.9";
 
 	private PropertiesFrame properties;
 
@@ -58,8 +58,10 @@ public class ClientWindow
 	private JScrollPane chatAreaScrollPane;
 
 	private JTextField chatbox;
-	// private ArrayList<String> chatHistory;
-	private Stack<String> chatHistory;
+	// use an arraylist so we can cycle up/down through history
+	private ArrayList<String> chatHistory;
+	private int chatHistoryMaxBuffer = 50;
+	private int historyIndex = -1;
 	private int historyCounter = 0;
 	private String[] commandList = { "/help", "/hist [clear]",
 			"/setcolor [text] [background]", "/setname name", "/clear" };
@@ -71,21 +73,28 @@ public class ClientWindow
 	{
 		super();
 		mainWindow = new JFrame(frameTitle);
+		mainWindow.setSize(frameWidth, frameHeight);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		properties = new PropertiesFrame(mainWindow, this);
+		properties = new PropertiesFrame(this);
 		mainPanel = new JPanel(new GridLayout(0, 1, 5, 5));
 
 		createAndAddMenuBar();
 
-		// chatHistory = new ArrayList<String>(10); TODO
-		chatHistory = new Stack<String>();
+		chatHistory = new ArrayList<String>(chatHistoryMaxBuffer);
 
 		createAndShowGUI();
 
-		mainWindow.pack();
+		//mainWindow.pack();
 		mainWindow.setLocationRelativeTo(null);
+		// set the chatbox as default focus (i.e. user can type immediately)
+		chatbox.requestFocusInWindow();
 		// show mainWindow
 		mainWindow.setVisible(true);
+	}
+
+	public JFrame getWindow()
+	{
+		return mainWindow;
 	}
 
 	private void createAndShowGUI()
@@ -111,10 +120,27 @@ public class ClientWindow
 			@Override
 			public void keyPressed(KeyEvent ke)
 			{
+				String command = "End of recent commands";
 				if(ke.getKeyCode() == KeyEvent.VK_UP)
-					chatbox.setText(chatHistory.peek()); // populate most recently sent message
+				{
+					// get a previous message
+					if (historyIndex > 0)
+						--historyIndex;
+					else
+						historyIndex = 0;
+					command = chatHistory.get(historyIndex);
+					chatbox.setText(command);
+				}
 				else if(ke.getKeyCode() == KeyEvent.VK_DOWN)
-					chatbox.setText(""); // clear text on down arrow
+				{
+					// get a next message
+					if (historyIndex < chatHistory.size() - 1)
+						++historyIndex;
+					else
+						historyIndex = chatHistory.size() - 1;
+					command = chatHistory.get(historyIndex);
+					chatbox.setText(command);
+				}
 			}
 		});
 		buttonPanel.add(chatbox);
@@ -306,10 +332,8 @@ public class ClientWindow
 			case "black":
 				choice = Color.black;
 				break;
-			case "grey":
-				choice = Color.gray;
-				break;
 			case "gray":
+			case "grey":
 				choice = Color.gray;
 				break;
 			case "red":
@@ -355,17 +379,7 @@ public class ClientWindow
 	public void setTextColor(Color fg)
 	{
 		if(chatArea.getBackground() == fg)
-			chatArea.append("\nCannot set text & background color to the same thing.\n"); // almost
-																							// certain
-																							// this
-																							// will
-																							// never
-																							// trigger
-																							// (as
-																							// of
-																							// oct
-																							// 1,
-																							// 2014)
+			chatArea.append("\nCannot make text & background color to the same.\n");
 		else
 			chatArea.setForeground(fg);
 	}
@@ -373,7 +387,7 @@ public class ClientWindow
 	public void setBackgroundColor(Color bg)
 	{
 		if(chatArea.getForeground() == bg)
-			chatArea.append("\nCannot set text & background color to the same thing.\n");
+			chatArea.append("\nCannot make text & background color to the same.\n");
 		else
 			chatArea.setBackground(bg);
 	}
@@ -400,35 +414,35 @@ public class ClientWindow
 		public void actionPerformed(ActionEvent e)
 		{
 			String message = chatbox.getText();
+			message = message.trim();
 			String parse[] = message.split(" ");
 
 			if(parse.length >= 2)
 				evaluateCommand(parse);
+			// print command history
 			else if(parse[0].trim().equalsIgnoreCase("/hist"))
 			{
-				// chatHistory.add(makeHistoryString(chatbox.getText()));
-				// chatHistory.push(makeHistoryString(chatbox.getText()));//TODO
-				chatHistory.push(chatbox.getText());
 				for(String s : chatHistory)
 					chatArea.append(makeHistoryString(s) + "\n");
-			} else if(parse[0].trim().equalsIgnoreCase("/help"))
+			}
+			// show help options
+			else if(parse[0].trim().equalsIgnoreCase("/help"))
 				printHelp();
-			else if(parse[0].trim().equalsIgnoreCase("/setcolor")) // set
-																	// default
-																	// colors
+			// set default colors
+			else if(parse[0].trim().equalsIgnoreCase("/setcolor"))
 			{
 				chatArea.setForeground(Color.black);
 				chatArea.setBackground(Color.white);
-			} else if(parse[0].trim().equalsIgnoreCase("/clear")) // delete all
-																	// current
-																	// text
-				chatArea.setText(null);
+			}
+			// delete all text from the chat area
+			else if(parse[0].trim().equalsIgnoreCase("/clear"))
+				chatArea.setText("");
 
-			message = "[" + username + "] " + chatbox.getText() + "\n";
-			chatArea.append(message);
-			// chatHistory.add(makeHistoryString(chatbox.getText()));
-			// chatHistory.push(makeHistoryString(chatbox.getText()));
-			chatHistory.push(chatbox.getText());// TODO
+			// save the message to the history buffer
+			chatHistory.add(message);
+			historyIndex = chatHistory.size(); // do not use -1 here since the history scrolling logic adjusts the index
+			
+			chatArea.append("[" + username + "] " + chatbox.getText() + "\n");
 
 			chatbox.setText("");
 		}

@@ -18,7 +18,7 @@
 package textchat;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -51,17 +51,17 @@ public class PropertiesFrame
 	private String[] colors = {"black", "grey", "red", "pink", "orange", "green", "blue", "magenta", "cyan", "white"};
 	
 	
-	public PropertiesFrame(JFrame parent, ClientWindow main)
+	public PropertiesFrame(ClientWindow main)
 	{
 		super();
 		client = main;
 		
 		propertiesFrame = new JFrame(frameTitle);
-		propertiesFrame.setLocationRelativeTo(parent);
+		propertiesFrame.setLocationRelativeTo(client.getWindow());
 		propertiesFrame.setSize(frameWidth, frameHeight);
 		propertiesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		propertiesPanel = new JPanel(new FlowLayout()); // TODO change layout
+		propertiesPanel = new JPanel(new GridLayout(0, 2, 5, 5));
 		
 		createUI();
 		addUI();
@@ -99,6 +99,7 @@ public class PropertiesFrame
 			{
 				// set username when user hits <enter>
 				String name = nameTF.getText(); // TODO refactor: helper function for username validation
+				name = name.trim();
 				if(name != null && !name.isEmpty() && !name.equalsIgnoreCase(defaultName))
 					client.setUsername(name);
 			}
@@ -140,18 +141,18 @@ public class PropertiesFrame
 		Color choice = null;
 		switch(s)
 		{
-		case "black": choice = Color.black; break;
-		case "grey": choice = Color.gray; break;
-		case "gray": choice = Color.gray; break;
-		case "red": choice = Color.red; break;
-		case "pink": choice = Color.pink; break;
-		case "orange": choice = Color.orange; break;
-		case "green": choice = Color.green; break;
-		case "blue": choice = Color.blue; break;
-		case "magenta": choice = Color.magenta; break;
-		case "cyan": choice = Color.cyan; break;
-		case "white": choice = Color.white; break;
-		default: break;
+			case "black": choice = Color.black; break;
+			case "gray":
+			case "grey": choice = Color.gray; break;
+			case "red": choice = Color.red; break;
+			case "pink": choice = Color.pink; break;
+			case "orange": choice = Color.orange; break;
+			case "green": choice = Color.green; break;
+			case "blue": choice = Color.blue; break;
+			case "magenta": choice = Color.magenta; break;
+			case "cyan": choice = Color.cyan; break;
+			case "white": choice = Color.white; break;
+			default: break;
 		}
 		return choice;
 	}
@@ -165,6 +166,10 @@ public class PropertiesFrame
 		propertiesFrame.setVisible(isVisible);
 	}
 
+	/**
+	 * Request the frame to finish and terminate.
+	 * 
+	 */
 	public void stopExecution()
 	{
 		// TODO save any config data
