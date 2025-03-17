@@ -46,8 +46,8 @@ public class ClientWindow
 	private String frameTitle = "TextChat";
 	private final int frameWidth = 300;
 	private final int frameHeight = 600;
-	private String author = "Doug Chidester";
-	private String version = " v0.0.7b";
+	private String author = "Doug C";
+	private String version = " v0.0.8";
 
 	private PropertiesFrame properties;
 
@@ -178,6 +178,9 @@ public class ClientWindow
 			{
 				// save data and close program if user clicks: File -> Quit
 				// writeToFile(filenameTextfield.getText());
+
+				// request the properties Frame to cleanup/save and exit
+				properties.stopExecution();
 				mainWindow.dispose();
 			}
 		});
@@ -218,7 +221,7 @@ public class ClientWindow
 				// Started
 				JOptionPane.showMessageDialog(
 						null,
-						"halp msg",
+						"Work in progress...",
 						"Usage",
 						JOptionPane.PLAIN_MESSAGE,
 						new ImageIcon(this.getClass().getResource(

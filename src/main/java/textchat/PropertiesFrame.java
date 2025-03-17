@@ -44,7 +44,9 @@ public class PropertiesFrame
 	
 	private String defaultName = "default_user";
 	private JButton saveButton;
+	private JLabel textColorLabel;
 	private JComboBox<String> textColorChoices;
+	private JLabel bgColorLabel;
 	private JComboBox<String> bgColorChoices;
 	private String[] colors = {"black", "grey", "red", "pink", "orange", "green", "blue", "magenta", "cyan", "white"};
 	
@@ -59,7 +61,7 @@ public class PropertiesFrame
 		propertiesFrame.setSize(frameWidth, frameHeight);
 		propertiesFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		propertiesPanel = new JPanel(new FlowLayout());
+		propertiesPanel = new JPanel(new FlowLayout()); // TODO change layout
 		
 		createUI();
 		addUI();
@@ -72,7 +74,9 @@ public class PropertiesFrame
 	{
 		propertiesPanel.add(nameLabel);
 		propertiesPanel.add(nameTF);
+		propertiesPanel.add(textColorLabel);
 		propertiesPanel.add(textColorChoices);
+		propertiesPanel.add(bgColorLabel);
 		propertiesPanel.add(bgColorChoices);
 		propertiesPanel.add(saveButton);
 		
@@ -114,8 +118,12 @@ public class PropertiesFrame
 			}
 		});
 		
+		textColorLabel = new JLabel("Text color");
+
 		textColorChoices = new JComboBox<String>(colors);
 		textColorChoices.setToolTipText("Text Color");
+
+		bgColorLabel = new JLabel("Background color");
 		
 		bgColorChoices = new JComboBox<String>(colors);
 		bgColorChoices.setToolTipText("Background Color");
@@ -155,5 +163,11 @@ public class PropertiesFrame
 	public void showFrame(boolean isVisible)
 	{
 		propertiesFrame.setVisible(isVisible);
+	}
+
+	public void stopExecution()
+	{
+		// TODO save any config data
+		propertiesFrame.dispose();
 	}
 }
